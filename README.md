@@ -32,4 +32,4 @@ config :combo_ecto,
 
 ## License
 
-Same as Combo.
+Same as [Combo](https://github.com/combo-team/combo).
