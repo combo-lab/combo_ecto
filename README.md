@@ -4,8 +4,8 @@ Provides Ecto integration for Combo.
 
 ## Features
 
-- implements `Combo.HTML.FormData` protocol for `Ecto.Changeset`
 - implements `Plug.Exception` protocol for the relevant Ecto exceptions
+- implements `Combo.HTML.FormData` protocol for `Ecto.Changeset`
 - provides `Combo.Ecto.SQL.Sandbox` plug for concurrent browser tests
 
 ## Installation
