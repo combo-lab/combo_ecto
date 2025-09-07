@@ -1,7 +1,8 @@
 defmodule Combo.Ecto.SQL.SandboxTest do
   use ExUnit.Case, async: true
-  use Plug.Test
 
+  import Plug.Test
+  import Plug.Conn
   alias Combo.Ecto.SQL.Sandbox
 
   defmodule MockSandbox do
