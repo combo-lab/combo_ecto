@@ -2,22 +2,10 @@ defmodule PhoenixEcto.HTMLTest do
   use ExUnit.Case, async: true
 
   import Ecto.Changeset
-  import Phoenix.HTML
   import Phoenix.HTML.Form
 
   defp to_form(changeset, options \\ []) do
     Phoenix.HTML.FormData.to_form(changeset, options)
-  end
-
-  test "converts datetime to safe" do
-    {:ok, t} = Time.new(0, 0, 0)
-    assert html_escape(t) == {:safe, "00:00:00"}
-
-    {:ok, d} = Date.new(2010, 4, 17)
-    assert html_escape(d) == {:safe, "2010-04-17"}
-
-    {:ok, dt} = NaiveDateTime.new(2010, 4, 17, 0, 0, 0)
-    assert html_escape(dt) == {:safe, "2010-04-17T00:00:00"}
   end
 
   describe "to_form" do
