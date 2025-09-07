@@ -10,7 +10,7 @@ defmodule Combo.Ecto.Mixfile do
     [
       app: :combo_ecto,
       version: @version,
-      elixir: "~> 1.15",
+      elixir: "~> 1.18",
       deps: deps(),
       description: @description,
       source_url: @source_url,
