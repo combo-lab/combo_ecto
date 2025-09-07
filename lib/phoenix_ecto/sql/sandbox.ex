@@ -83,64 +83,6 @@ defmodule Combo.Ecto.SQL.Sandbox do
   `allow/2` needs to be manually called once for each channel, at best directly
   at the start of `c:Phoenix.Channel.join/3`.
 
-  ## Acceptance tests with LiveViews
-
-  LiveViews can be supported in a similar fashion to channels. First declare the
-  `:user_agent` (or a custom header) in your live socket configuration in `endpoint.ex`:
-
-      socket "/live", Phoenix.LiveView.Socket,
-        websocket: [connect_info: [:user_agent, session: @session_options]]
-
-  Now you can use the `on_mount/4` callback to check the header and assign the sandbox:
-
-      defmodule MyApp.LiveAcceptance do
-        import Phoenix.LiveView
-        import Phoenix.Component
-
-        def on_mount(:default, _params, _session, socket) do
-          socket =
-            assign_new(socket, :combo_ecto_sandbox, fn ->
-              if connected?(socket), do: get_connect_info(socket, :user_agent)
-            end)
-
-          metadata = socket.assigns.phoenix_ecto_sandbox
-          Combo.Ecto.SQL.Sandbox.allow(metadata, Ecto.Adapters.SQL.Sandbox)
-          {:cont, socket}
-        end
-      end
-      
-  Now, in your `my_app_web.ex` file, you can invoke this callback for all of your
-  LiveViews if the sandbox configuration, defined at the beginning of the
-  documentation, is enabled:
-
-      def live_view do
-        quote do
-          use Phoenix.LiveView
-          # ...
-          
-          if Application.compile_env(:your_app, :sql_sandbox) do
-            on_mount MyApp.LiveAcceptance
-          end
-          
-          # ...
-        end
-      end
-
-  If you have `on_mount` hooks in `live_session` defined in your `router.ex`
-  (for example, routes requiring authentication after running `mix phx.gen.auth`
-  to generate your authentication system), make sure the `MyApp.LiveAcceptance`
-  hook runs before, so following hooks have access to the Ecto Sandbox:
-
-      live_session :require_authenticated_user,
-        on_mount:
-          if(Application.compile_env(:your_app, :sql_sandbox),
-            do: [MyAppWeb.AcceptanceHook],
-            else: []
-          ) ++ [{MyAppWeb.UserAuth, :ensure_authenticated}] do
-        live "/users/settings", UserSettingsLive, :edit
-        live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      end
-
   ## Concurrent end-to-end tests with external clients
 
   Concurrent and transactional tests for external HTTP clients is supported,
