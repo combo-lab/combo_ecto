@@ -31,9 +31,9 @@ defmodule Combo.Ecto.Mixfile do
 
   defp deps do
     [
-      {:combo, path: "../combo", optional: true},
-      {:ecto, "~> 3.5"},
+      {:combo, "~> 0.1"},
       {:plug, "~> 1.9"},
+      {:ecto, "~> 3.5"},
       {:postgrex, "~> 0.16", optional: true},
       {:ex_check, ">= 0.0.0", only: [:dev], runtime: false},
       {:credo, ">= 0.0.0", only: [:dev], runtime: false},
@@ -62,7 +62,10 @@ defmodule Combo.Ecto.Mixfile do
   end
 
   defp aliases do
-    [publish: ["hex.publish", "tag"], tag: &tag_release/1]
+    [
+      publish: ["hex.publish", "tag"],
+      tag: &tag_release/1
+    ]
   end
 
   defp tag_release(_) do
