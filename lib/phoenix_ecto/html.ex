@@ -336,10 +336,4 @@ if Code.ensure_loaded?(Phoenix.HTML) do
     defp form_for_method(%{__meta__: %{state: :loaded}}), do: "put"
     defp form_for_method(_), do: "post"
   end
-
-  defimpl Phoenix.HTML.Safe, for: Decimal do
-    def to_iodata(t) do
-      @for.to_string(t, :normal)
-    end
-  end
 end

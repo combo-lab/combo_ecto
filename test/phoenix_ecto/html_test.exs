@@ -9,10 +9,6 @@ defmodule PhoenixEcto.HTMLTest do
     Phoenix.HTML.FormData.to_form(changeset, options)
   end
 
-  test "converts decimal to safe" do
-    assert html_escape(Decimal.new("1.0")) == {:safe, "1.0"}
-  end
-
   test "converts datetime to safe" do
     {:ok, t} = Time.new(0, 0, 0)
     assert html_escape(t) == {:safe, "00:00:00"}
