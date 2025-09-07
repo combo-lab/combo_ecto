@@ -17,7 +17,9 @@ Add `:combo_ecto` to the list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:combo_ecto, "~> 0.1"}]
+  [
+    {:combo_ecto, "<requirement>"}
+  ]
 end
 ```
 
