@@ -21,6 +21,7 @@ defimpl Combo.HTML.FormData, for: Ecto.Changeset do
     }
   end
 
+  # credo:disable-for-next-line
   def to_form(source, %{action: parent_action} = form, field, opts) do
     if Keyword.has_key?(opts, :default) do
       raise ArgumentError,
