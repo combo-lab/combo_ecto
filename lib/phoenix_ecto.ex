@@ -1,4 +1,4 @@
-defmodule Phoenix.Ecto do
+defmodule Combo.Ecto do
   @moduledoc """
   Integrates Phoenix with Ecto.
 
@@ -9,9 +9,9 @@ defmodule Phoenix.Ecto do
 
   def start(_type, _args) do
     children = [
-      {DynamicSupervisor, name: Phoenix.Ecto.SQL.SandboxSupervisor, strategy: :one_for_one}
+      {DynamicSupervisor, name: Combo.Ecto.SQL.SandboxSupervisor, strategy: :one_for_one}
     ]
 
-    Supervisor.start_link(children, strategy: :one_for_one, name: Phoenix.Ecto.Supervisor)
+    Supervisor.start_link(children, strategy: :one_for_one, name: Combo.Ecto.Supervisor)
   end
 end

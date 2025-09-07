@@ -1,4 +1,4 @@
-defmodule PhoenixEcto.InputsForTest do
+defmodule Combo.Ecto.InputsForTest do
   use ExUnit.Case, async: true
 
   import Ecto.Changeset

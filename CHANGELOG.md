@@ -94,7 +94,7 @@ This release bumps the requirement for Ecto and Phoenix.
 ## v4.1.0
 
 * Enhancements
-  * Add `Phoenix.Ecto.CheckRepoStatus` plug
+  * Add `Combo.Ecto.CheckRepoStatus` plug
 
 ## v4.0.0
 
@@ -113,7 +113,7 @@ This release bumps the requirement for Ecto and Phoenix.
 ## v3.3.0
 
 * Enhancements
-  * Support concurrent and transactional end-to-end tests for external HTTP clients using the new `:at` and `:repo` options to the `Phoenix.Ecto.SQL.Sandbox` plug
+  * Support concurrent and transactional end-to-end tests for external HTTP clients using the new `:at` and `:repo` options to the `Combo.Ecto.SQL.Sandbox` plug
 
 ## v3.2.3
 
@@ -151,7 +151,7 @@ This release bumps the requirement for Ecto and Phoenix.
 ## v3.0.0
 
 * Enhancements
-  * Add `Phoenix.Ecto.SQL.Sandbox` for concurrent acceptance tests with Phoenix and Ecto based on user-agent
+  * Add `Combo.Ecto.SQL.Sandbox` for concurrent acceptance tests with Phoenix and Ecto based on user-agent
   * Use the new sandbox based on user-agent
   * Depend on Phoenix.HTML ~> 2.6
   * Depend on Ecto ~> 2.0

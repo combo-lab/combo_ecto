@@ -1,4 +1,4 @@
-defmodule PhoenixEcto.HTMLTest do
+defmodule Combo.Ecto.HTMLTest do
   use ExUnit.Case, async: true
 
   import Ecto.Changeset

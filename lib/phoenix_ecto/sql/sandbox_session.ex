@@ -1,4 +1,4 @@
-defmodule Phoenix.Ecto.SQL.SandboxSession do
+defmodule Combo.Ecto.SQL.SandboxSession do
   @moduledoc false
   use GenServer, restart: :temporary
 

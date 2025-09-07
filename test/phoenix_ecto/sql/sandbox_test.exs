@@ -1,8 +1,8 @@
-defmodule PhoenixEcto.SQL.SandboxTest do
+defmodule Combo.Ecto.SQL.SandboxTest do
   use ExUnit.Case, async: true
   use Plug.Test
 
-  alias Phoenix.Ecto.SQL.Sandbox
+  alias Combo.Ecto.SQL.Sandbox
 
   defmodule MockSandbox do
     def checkout(repo, opts) do
@@ -36,7 +36,7 @@ defmodule PhoenixEcto.SQL.SandboxTest do
 
   defp add_metadata(conn, metadata, header_key) do
     encoded = {:v1, metadata} |> :erlang.term_to_binary() |> Base.url_encode64()
-    put_req_header(conn, header_key, "PhoenixEcto/BeamMetadata (#{encoded})")
+    put_req_header(conn, header_key, "Combo.Ecto/BeamMetadata (#{encoded})")
   end
 
   test "allows sandbox access to single repository" do

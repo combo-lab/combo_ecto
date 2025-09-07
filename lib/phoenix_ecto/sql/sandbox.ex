@@ -1,4 +1,4 @@
-defmodule Phoenix.Ecto.SQL.Sandbox do
+defmodule Combo.Ecto.SQL.Sandbox do
   @moduledoc """
   A plug to allow concurrent, transactional acceptance tests with
   [`Ecto.Adapters.SQL.Sandbox`](https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.Sandbox.html).
@@ -13,7 +13,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   And use the flag to conditionally add the plug to `lib/your_app/endpoint.ex`:
 
       if Application.compile_env(:your_app, :sql_sandbox) do
-        plug Phoenix.Ecto.SQL.Sandbox
+        plug Combo.Ecto.SQL.Sandbox
       end
 
   It's important that this is at the top of `endpoint.ex`, before any other plugs.
@@ -25,7 +25,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
       setup tags do
         pid = Ecto.Adapters.SQL.Sandbox.start_owner!(YourApp.Repo, shared: not tags[:async])
         on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
-        metadata_header = Phoenix.Ecto.SQL.Sandbox.metadata_for(YourApp.Repo, pid)
+        metadata_header = Combo.Ecto.SQL.Sandbox.metadata_for(YourApp.Repo, pid)
         # pass the metadata to the acceptance test library
         :ok
       end
@@ -53,7 +53,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
 
       # user_socket.ex
       def connect(_params, socket, connect_info) do
-        {:ok, assign(socket, :phoenix_ecto_sandbox, connect_info.user_agent)}
+        {:ok, assign(socket, :combo_ecto_sandbox, connect_info.user_agent)}
       end
 
   Or if you are using a custom header:
@@ -74,7 +74,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
 
       # This is a great function to extract to a helper module
       defp allow_ecto_sandbox(socket) do
-        Phoenix.Ecto.SQL.Sandbox.allow(
+        Combo.Ecto.SQL.Sandbox.allow(
           socket.assigns.phoenix_ecto_sandbox,
           Ecto.Adapters.SQL.Sandbox
         )
@@ -99,12 +99,12 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
 
         def on_mount(:default, _params, _session, socket) do
           socket =
-            assign_new(socket, :phoenix_ecto_sandbox, fn ->
+            assign_new(socket, :combo_ecto_sandbox, fn ->
               if connected?(socket), do: get_connect_info(socket, :user_agent)
             end)
 
           metadata = socket.assigns.phoenix_ecto_sandbox
-          Phoenix.Ecto.SQL.Sandbox.allow(metadata, Ecto.Adapters.SQL.Sandbox)
+          Combo.Ecto.SQL.Sandbox.allow(metadata, Ecto.Adapters.SQL.Sandbox)
           {:cont, socket}
         end
       end
@@ -147,10 +147,10 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   allowing for complete end-to-end tests. This is useful for cases such as
   JavaScript test suites for single page applications that exercise the
   Phoenix endpoint for end-to-end test setup and teardown. To enable this,
-  you can expose a sandbox route on the `Phoenix.Ecto.SQL.Sandbox` plug by
+  you can expose a sandbox route on the `Combo.Ecto.SQL.Sandbox` plug by
   providing the `:at`, and `:repo` options. For example:
 
-      plug Phoenix.Ecto.SQL.Sandbox,
+      plug Combo.Ecto.SQL.Sandbox,
         at: "/sandbox",
         repo: MyApp.Repo,
         timeout: 15_000 # the default
@@ -173,7 +173,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
 
   import Plug.Conn
   alias Plug.Conn
-  alias Phoenix.Ecto.SQL.{SandboxSession, SandboxSupervisor}
+  alias Combo.Ecto.SQL.{SandboxSession, SandboxSupervisor}
 
   @doc """
   Spawns a sandbox session to checkout a connection for a remote client.
@@ -254,7 +254,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   def call(conn, %{header: header, sandbox: sandbox}) do
     header = extract_header(conn, header)
     allow(header, sandbox)
-    assign(conn, :phoenix_ecto_sandbox, header)
+    assign(conn, :combo_ecto_sandbox, header)
   end
 
   defp extract_header(%Conn{} = conn, header) do
@@ -265,7 +265,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   Returns metadata to establish a sandbox for.
 
   The metadata is then passed via user-agent/headers to browsers.
-  Upon request, the `Phoenix.Ecto.SQL.Sandbox` plug will decode
+  Upon request, the `Combo.Ecto.SQL.Sandbox` plug will decode
   the header and allow the request process under the sandbox.
 
   ## Options

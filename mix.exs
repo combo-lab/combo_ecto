@@ -1,4 +1,4 @@
-defmodule PhoenixEcto.Mixfile do
+defmodule Combo.Ecto.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/phoenixframework/phoenix_ecto"
@@ -6,7 +6,7 @@ defmodule PhoenixEcto.Mixfile do
 
   def project do
     [
-      app: :phoenix_ecto,
+      app: :combo_ecto,
       version: @version,
       elixir: "~> 1.11",
       deps: deps(),
@@ -35,7 +35,7 @@ defmodule PhoenixEcto.Mixfile do
 
   def application do
     [
-      mod: {Phoenix.Ecto, []},
+      mod: {Combo.Ecto, []},
       extra_applications: [:logger],
       env: [exclude_ecto_exceptions_from_plug: []]
     ]

@@ -5,7 +5,7 @@ errors = [
   {Ecto.StaleEntryError, 409}
 ]
 
-excluded_exceptions = Application.get_env(:phoenix_ecto, :exclude_ecto_exceptions_from_plug, [])
+excluded_exceptions = Application.get_env(:combo_ecto, :exclude_ecto_exceptions_from_plug, [])
 
 for {exception, status_code} <- errors do
   unless exception in excluded_exceptions do
