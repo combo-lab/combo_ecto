@@ -1,51 +1,46 @@
-name: CI
-on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
 jobs:
-  test:
+  mix_check:
+    name: Elixir ${{ matrix.elixir }} / OTP ${{ matrix.otp }}
     runs-on: ubuntu-24.04
-    env:
-      MIX_ENV: test
     strategy:
-      fail-fast: false
+      # Following matrix is maintained by following https://hexdocs.pm/elixir/compatibility-and-deprecations.html
+      # And, only the most recent 3 versions of Elixir are involved.
       matrix:
         include:
-          - elixir: 1.14
-            otp: 24
-          - elixir: 1.18
-            otp: 27
-            lint: lint
+          # Elixir v1.18
+          - { elixir: '1.18.x', otp: '27.x' }
+          # - { elixir: '1.18.x', otp: '26.x' }
+          # - { elixir: '1.18.x', otp: '25.x' }
+          # # Elixir v1.17
+          # - { elixir: '1.17.x', otp: '27.x' }
+          # - { elixir: '1.17.x', otp: '26.x' }
+          # - { elixir: '1.17.x', otp: '25.x' }
+          # # Elixir v1.16
+          # - { elixir: '1.16.x', otp: '26.x' }
+          # - { elixir: '1.16.x', otp: '25.x' }
+          # - { elixir: '1.16.x', otp: '24.x' }
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: ${{ matrix.otp }}
-          elixir-version: ${{ matrix.elixir }}
-
-      - uses: actions/cache@v3
-        with:
-          path: deps
-          key: mix-deps-${{ hashFiles('**/mix.lock') }}
-
-      - run: mix deps.get
-
-      - run: mix format --check-formatted
-        if: ${{ matrix.lint }}
-
-      - run: mix deps.unlock --check-unused
-        if: ${{ matrix.lint }}
-
-      - run: mix deps.compile
-
-      - run: mix compile --warnings-as-errors
-        if: ${{ matrix.lint }}
-
-      - run: mix test
-        if: ${{ ! matrix.lint }}
-
-      - run: mix test --warnings-as-errors
-        if: ${{ matrix.lint }}
+    - uses: actions/checkout@v4
+    - name: Setup Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{ matrix.elixir }}
+        otp-version: ${{ matrix.otp }}
+    - name: Restore dependencies cache
+      uses: actions/cache@v4
+      with:
+        path: deps
+        key: ${{ runner.os }}-elixir_${{ matrix.elixir }}-otp_${{ matrix.otp }}-mix_${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-elixir_${{ matrix.elixir }}-otp_${{ matrix.otp }}-mix
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Run mix check
+      run: mix check
