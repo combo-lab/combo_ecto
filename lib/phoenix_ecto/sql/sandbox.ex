@@ -3,34 +3,73 @@ defmodule Combo.Ecto.SQL.Sandbox do
   A plug to allow concurrent, transactional acceptance tests with
   [`Ecto.Adapters.SQL.Sandbox`](https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.Sandbox.html).
 
-  ## Example
+  ## Requirements
+
+  PostgreSQL is required.
+
+  ## Usage
 
   This plug should only be used during tests. First, set a flag to
   enable it in `config/test.exs`:
 
-      config :your_app, sql_sandbox: true
+      config :demo, sql_sandbox: true
 
-  And use the flag to conditionally add the plug to `lib/your_app/endpoint.ex`:
+  And use the flag to conditionally add the plug to `lib/demo/web/endpoint.ex`:
 
-      if Application.compile_env(:your_app, :sql_sandbox) do
+      if Application.compile_env(:demo, :sql_sandbox) do
         plug Combo.Ecto.SQL.Sandbox
       end
 
-  It's important that this is at the top of `endpoint.ex`, before any other plugs.
+  It's important that this is placed before the line of `plug Demo.Web.Router`,
+  or any other plugs that may access the database.
 
   Then, within an acceptance test, checkout a sandboxed connection as before.
-  Use `metadata_for/2` helper to get the session metadata to that will allow access
-  to the test's connection. In general lines, you would write this:
+  Use `metadata_for/2` helper to get the session metadata to that will allow
+  access to the test's connection. In general, you would write this:
 
       setup tags do
-        pid = Ecto.Adapters.SQL.Sandbox.start_owner!(YourApp.Repo, shared: not tags[:async])
+        pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Demo.Core.Repo, shared: not tags[:async])
         on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
-        metadata_header = Combo.Ecto.SQL.Sandbox.metadata_for(YourApp.Repo, pid)
+        metadata_header = Combo.Ecto.SQL.Sandbox.metadata_for(Demo.Core.Repo, pid)
         # pass the metadata to the acceptance test library
         :ok
       end
 
-  You can follow the instructions for Wallaby [here](https://hexdocs.pm/wallaby/readme.html#phoenix).
+  ### Wallaby
+
+  To write concurrent acceptance tests with Wallaby, first add it as a dependency
+  to your `mix.exs`:
+
+      {:wallaby, "~> 0.25", only: :test}
+
+  Wallaby can take care of setting up the Ecto Sandbox for you if you use
+  `use Wallaby.Feature` in your test module.
+
+
+      defmodule MyAppWeb.PageFeature do
+        use ExUnit.Case, async: true
+        use Wallaby.Feature
+      
+        feature "shows some text", %{session: session} do
+          session
+          |> visit("/home")
+          |> assert_text("Hello world!")
+        end
+      end
+
+  If you don't `use Wallaby.Feature`, you can add the following to your test case
+  (or case template):
+
+      use Wallaby.DSL
+      
+      setup tags do
+        pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Demo.Core.Repo, shared: not tags[:async])
+        on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+        metadata = Combo.Ecto.SQL.Sandbox.metadata_for(Demo.Core.Repo, pid)
+        {:ok, session} = Wallaby.start_session(metadata: metadata)
+      end
+
+  Read more instructions for Wallaby [here](https://hexdocs.pm/wallaby/readme.html).
 
   ## Acceptance tests with channels
 
@@ -48,7 +87,7 @@ defmodule Combo.Ecto.SQL.Sandbox do
       socket "/path", Socket,
         websocket: [connect_info: [:x_headers, …]]
 
-  Now use the `c:Phoenix.Socket.connect/3` callback to access the header and
+  Now use the `c:Combo.Socket.connect/3` callback to access the header and
   store it in the socket:
 
       # user_socket.ex
@@ -75,20 +114,20 @@ defmodule Combo.Ecto.SQL.Sandbox do
       # This is a great function to extract to a helper module
       defp allow_ecto_sandbox(socket) do
         Combo.Ecto.SQL.Sandbox.allow(
-          socket.assigns.phoenix_ecto_sandbox,
+          socket.assigns.combo_ecto_sandbox,
           Ecto.Adapters.SQL.Sandbox
         )
       end
 
   `allow/2` needs to be manually called once for each channel, at best directly
-  at the start of `c:Phoenix.Channel.join/3`.
+  at the start of `c:Combo.Channel.join/3`.
 
   ## Concurrent end-to-end tests with external clients
 
   Concurrent and transactional tests for external HTTP clients is supported,
   allowing for complete end-to-end tests. This is useful for cases such as
   JavaScript test suites for single page applications that exercise the
-  Phoenix endpoint for end-to-end test setup and teardown. To enable this,
+  Combo endpoint for end-to-end test setup and teardown. To enable this,
   you can expose a sandbox route on the `Combo.Ecto.SQL.Sandbox` plug by
   providing the `:at`, and `:repo` options. For example:
 

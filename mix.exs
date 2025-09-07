@@ -1,7 +1,7 @@
 defmodule Combo.Ecto.Mixfile do
   use Mix.Project
 
-  @source_url "https://github.com/phoenixframework/phoenix_ecto"
+  @source_url "https://github.com/combo-team/combo_ecto"
   @version "4.6.5"
 
   def project do
@@ -37,7 +37,7 @@ defmodule Combo.Ecto.Mixfile do
     [
       mod: {Combo.Ecto, []},
       extra_applications: [:logger],
-      env: [exclude_ecto_exceptions_from_plug: []]
+      env: [exclude_exceptions: []]
     ]
   end
 
