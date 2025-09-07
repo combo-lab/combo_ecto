@@ -9,12 +9,13 @@ defmodule Combo.Ecto.SQL.Sandbox do
 
   ## Usage
 
-  This plug should only be used during tests. First, set a flag to
-  enable it in `config/test.exs`:
+  This plug should only be used during tests.
+
+  First, set a flag to enable it in `config/test.exs`:
 
       config :demo, sql_sandbox: true
 
-  And use the flag to conditionally add the plug to `lib/demo/web/endpoint.ex`:
+  And, use the flag to conditionally add the plug to `lib/demo/web/endpoint.ex`:
 
       if Application.compile_env(:demo, :sql_sandbox) do
         plug Combo.Ecto.SQL.Sandbox
@@ -46,7 +47,7 @@ defmodule Combo.Ecto.SQL.Sandbox do
   `use Wallaby.Feature` in your test module.
 
 
-      defmodule MyAppWeb.PageFeature do
+      defmodule Demo.Web.PageFeature do
         use ExUnit.Case, async: true
         use Wallaby.Feature
       
@@ -133,7 +134,7 @@ defmodule Combo.Ecto.SQL.Sandbox do
 
       plug Combo.Ecto.SQL.Sandbox,
         at: "/sandbox",
-        repo: MyApp.Repo,
+        repo: Demo.Core.Repo,
         timeout: 15_000 # the default
 
   This would expose a route at `"/sandbox"` for the given repo where
@@ -148,7 +149,7 @@ defmodule Combo.Ecto.SQL.Sandbox do
   typically done by default in your `test/test_helper.exs`, but you
   may need to do it explicitly depending on your setup:
 
-      Ecto.Adapters.SQL.Sandbox.mode(MyApp.Repo, :manual)
+      Ecto.Adapters.SQL.Sandbox.mode(Demo.Core.Repo, :manual)
 
   """
 
@@ -161,7 +162,7 @@ defmodule Combo.Ecto.SQL.Sandbox do
 
   ## Examples
 
-      iex> {:ok, _owner_pid, metadata} = start_child(MyApp.Repo)
+      iex> {:ok, _owner_pid, metadata} = start_child(Demo.Core.Repo)
   """
   def start_child(repos, opts \\ []) do
     child_spec = {SandboxSession, {repos, self(), opts}}
@@ -181,8 +182,9 @@ defmodule Combo.Ecto.SQL.Sandbox do
 
   ## Examples
 
-      iex> {:ok, owner_pid, metadata} = start_child(MyApp.Repo)
+      iex> {:ok, owner_pid, metadata} = start_child(Demo.Core.Repo)
       iex> :ok = stop(owner_pid)
+
   """
   def stop(owner) when is_pid(owner) do
     GenServer.call(owner, :checkin)
