@@ -2,10 +2,10 @@ defmodule Combo.Ecto.HTMLTest do
   use ExUnit.Case, async: true
 
   import Ecto.Changeset
-  import Phoenix.HTML.Form
+  import Combo.HTML.Form
 
   defp to_form(changeset, options \\ []) do
-    Phoenix.HTML.FormData.to_form(changeset, options)
+    Combo.HTML.FormData.to_form(changeset, options)
   end
 
   describe "to_form" do
@@ -17,7 +17,7 @@ defmodule Combo.Ecto.HTMLTest do
       f = to_form(changeset)
       assert f.id == "user"
       assert f.name == "user"
-      assert f.impl == Phoenix.HTML.FormData.Ecto.Changeset
+      assert f.impl == Combo.HTML.FormData.Ecto.Changeset
       assert f.source == changeset
       assert f.params == %{}
       assert f.hidden == []
@@ -103,7 +103,7 @@ defmodule Combo.Ecto.HTMLTest do
 
       f = to_form(changeset, as: "another")
 
-      assert %Phoenix.HTML.FormField{
+      assert %Combo.HTML.FormField{
                id: "another_name",
                name: "another[name]",
                errors: [],
@@ -111,7 +111,7 @@ defmodule Combo.Ecto.HTMLTest do
                value: "JV"
              } = f[:name]
 
-      assert %Phoenix.HTML.FormField{
+      assert %Combo.HTML.FormField{
                id: "another_other",
                name: "another[other]",
                errors: [],
@@ -125,7 +125,7 @@ defmodule Combo.Ecto.HTMLTest do
 
       f = to_form(changeset)
 
-      assert %Phoenix.HTML.FormField{
+      assert %Combo.HTML.FormField{
                id: "schemaless_user_name",
                name: "schemaless_user[name]",
                errors: [],
@@ -138,7 +138,7 @@ defmodule Combo.Ecto.HTMLTest do
       changeset = cast(%User{}, %{"name" => "JV"}, ~w(name)a)
       f = to_form(changeset, id: "form_id")
 
-      assert %Phoenix.HTML.FormField{
+      assert %Combo.HTML.FormField{
                id: "form_id_name",
                name: "user[name]",
                errors: [],

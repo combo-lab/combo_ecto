@@ -6,12 +6,12 @@ defmodule Combo.Ecto.InputsForTest do
   defp to_inputs_form(changeset_or_form, field, opts \\ [])
 
   defp to_inputs_form(%Ecto.Changeset{} = changeset, field, opts) do
-    form = Phoenix.HTML.FormData.to_form(changeset, [])
-    Phoenix.HTML.FormData.to_form(changeset, form, field, opts)
+    form = Combo.HTML.FormData.to_form(changeset, [])
+    Combo.HTML.FormData.to_form(changeset, form, field, opts)
   end
 
-  defp to_inputs_form(%Phoenix.HTML.Form{} = form, field, opts) do
-    Phoenix.HTML.FormData.to_form(form.source, form, field, opts)
+  defp to_inputs_form(%Combo.HTML.Form{} = form, field, opts) do
+    Combo.HTML.FormData.to_form(form.source, form, field, opts)
   end
 
   ## has_one
@@ -23,11 +23,11 @@ defmodule Combo.Ecto.InputsForTest do
       |> cast_assoc(:comment)
 
     [f] = to_inputs_form(changeset, :comment)
-    assert f.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f.errors == []
     assert f.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comment_body",
              name: "user[comment][body]",
              value: nil
@@ -44,7 +44,7 @@ defmodule Combo.Ecto.InputsForTest do
     assert f.errors == []
     assert f.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comment_body",
              name: "user[comment][body]",
              value: "data"
@@ -61,7 +61,7 @@ defmodule Combo.Ecto.InputsForTest do
     assert f.errors == []
     assert f.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comment_body",
              name: "user[comment][body]",
              value: "ht"
@@ -77,7 +77,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comment_body",
              name: "user[comment][body]",
              value: "ht"
@@ -92,7 +92,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f] = to_inputs_form(changeset, :comment, as: "foo", id: "bar")
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_body",
              name: "foo[body]",
              value: "given"
@@ -126,23 +126,23 @@ defmodule Combo.Ecto.InputsForTest do
       |> cast_assoc(:comments)
 
     [f1, f2] = to_inputs_form(changeset, :comments)
-    assert f1.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f1.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f1.index == 0
     assert f1.errors == []
     assert f1.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_body",
              name: "user[comments][0][body]",
              value: "data1"
            } = f1[:body]
 
-    assert f2.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f2.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f2.index == 1
     assert f2.errors == []
     assert f2.source.validations == [body: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_body",
              name: "user[comments][1][body]",
              value: "data2"
@@ -162,25 +162,25 @@ defmodule Combo.Ecto.InputsForTest do
         append: [%Comment{body: "append"}]
       )
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_body",
              name: "user[comments][0][body]",
              value: "prepend"
            } = f0[:body]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_body",
              name: "user[comments][1][body]",
              value: "def1"
            } = f1[:body]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_2_body",
              name: "user[comments][2][body]",
              value: "def2"
            } = f2[:body]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_3_body",
              name: "user[comments][3][body]",
              value: "append"
@@ -202,7 +202,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f0.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_body",
              name: "user[comments][0][body]",
              value: "prepend"
@@ -210,7 +210,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f1.hidden == [id: "a"]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_body",
              name: "user[comments][1][body]",
              value: "def1"
@@ -218,7 +218,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f2.hidden == [id: "b"]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_2_body",
              name: "user[comments][2][body]",
              value: "def2"
@@ -226,7 +226,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f3.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_3_body",
              name: "user[comments][3][body]",
              value: "append"
@@ -253,7 +253,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f1.hidden == [id: 1]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_body",
              name: "user[comments][0][body]",
              value: "p1"
@@ -261,7 +261,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f2.hidden == [id: 2]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_body",
              name: "user[comments][1][body]",
              value: "p2"
@@ -276,13 +276,13 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f0, f1] = to_inputs_form(changeset, :comments, as: "foo", id: "bar")
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_0_body",
              name: "foo[0][body]",
              value: "data1"
            } = f0[:body]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_1_body",
              name: "foo[1][body]",
              value: "data2"
@@ -308,13 +308,13 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f1, f2] = to_inputs_form(changeset, :comments)
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_body",
              name: "user[comments][0][body]",
              value: "data1"
            } = f1[:body]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_body",
              name: "user[comments][1][body]",
              value: "data2"
@@ -329,13 +329,13 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f1, f2] = to_inputs_form(changeset, :comments)
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_0_position",
              name: "user[comments][0][position]",
              value: 0
            } = f1[:position]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_comments_1_position",
              name: "user[comments][1][position]",
              value: 1
@@ -351,11 +351,11 @@ defmodule Combo.Ecto.InputsForTest do
       |> cast_embed(:permalink)
 
     [f] = to_inputs_form(changeset, :permalink)
-    assert f.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f.errors == []
     assert f.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalink_url",
              name: "user[permalink][url]",
              value: nil
@@ -372,7 +372,7 @@ defmodule Combo.Ecto.InputsForTest do
     assert f.errors == []
     assert f.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalink_url",
              name: "user[permalink][url]",
              value: "data"
@@ -389,7 +389,7 @@ defmodule Combo.Ecto.InputsForTest do
     assert f.errors == []
     assert f.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalink_url",
              name: "user[permalink][url]",
              value: "ht"
@@ -405,7 +405,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalink_url",
              name: "user[permalink][url]",
              value: "ht"
@@ -420,7 +420,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f] = to_inputs_form(changeset, :permalink, as: "foo", id: "bar")
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_url",
              name: "foo[url]",
              value: "given"
@@ -454,23 +454,23 @@ defmodule Combo.Ecto.InputsForTest do
       |> cast_embed(:permalinks)
 
     [f1, f2] = to_inputs_form(changeset, :permalinks)
-    assert f1.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f1.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f1.index == 0
     assert f1.errors == []
     assert f1.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_0_url",
              name: "user[permalinks][0][url]",
              value: "data1"
            } = f1[:url]
 
-    assert f2.impl == Phoenix.HTML.FormData.Ecto.Changeset
+    assert f2.impl == Combo.HTML.FormData.Ecto.Changeset
     assert f2.index == 1
     assert f2.errors == []
     assert f2.source.validations == [url: {:length, min: 3}]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_1_url",
              name: "user[permalinks][1][url]",
              value: "data2"
@@ -490,25 +490,25 @@ defmodule Combo.Ecto.InputsForTest do
         append: [%Permalink{url: "append"}]
       )
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_0_url",
              name: "user[permalinks][0][url]",
              value: "prepend"
            } = f0[:url]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_1_url",
              name: "user[permalinks][1][url]",
              value: "def1"
            } = f1[:url]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_2_url",
              name: "user[permalinks][2][url]",
              value: "def2"
            } = f2[:url]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_3_url",
              name: "user[permalinks][3][url]",
              value: "append"
@@ -530,7 +530,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f0.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_0_url",
              name: "user[permalinks][0][url]",
              value: "prepend"
@@ -538,7 +538,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f1.hidden == [id: "a"]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_1_url",
              name: "user[permalinks][1][url]",
              value: "def1"
@@ -546,7 +546,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f2.hidden == [id: "b"]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_2_url",
              name: "user[permalinks][2][url]",
              value: "def2"
@@ -554,7 +554,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f3.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_3_url",
              name: "user[permalinks][3][url]",
              value: "append"
@@ -581,7 +581,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f1.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_0_url",
              name: "user[permalinks][0][url]",
              value: "p1"
@@ -589,7 +589,7 @@ defmodule Combo.Ecto.InputsForTest do
 
     assert f2.hidden == []
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "user_permalinks_1_url",
              name: "user[permalinks][1][url]",
              value: "p2"
@@ -604,13 +604,13 @@ defmodule Combo.Ecto.InputsForTest do
 
     [f0, f1] = to_inputs_form(changeset, :permalinks, as: "foo", id: "bar")
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_0_url",
              name: "foo[0][url]",
              value: "data1"
            } = f0[:url]
 
-    assert %Phoenix.HTML.FormField{
+    assert %Combo.HTML.FormField{
              id: "bar_1_url",
              name: "foo[1][url]",
              value: "data2"
@@ -634,7 +634,7 @@ defmodule Combo.Ecto.InputsForTest do
       |> cast(%{}, ~w()a)
       |> cast_assoc(:comment)
 
-    f = Phoenix.HTML.FormData.to_form(changeset, action: :insert)
+    f = Combo.HTML.FormData.to_form(changeset, action: :insert)
     assert f.action == :insert
 
     [f] = to_inputs_form(f, :comment)

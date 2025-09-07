@@ -51,7 +51,7 @@ defmodule Combo.Ecto.Mixfile do
 
   defp deps do
     [
-      {:phoenix_html, "~> 2.14.2 or ~> 3.0 or ~> 4.1", optional: true},
+      {:combo, path: "../combo", optional: true},
       {:ecto, "~> 3.5"},
       {:plug, "~> 1.9"},
       {:postgrex, "~> 0.16 or ~> 1.0", optional: true},

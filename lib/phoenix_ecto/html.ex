@@ -1,4 +1,4 @@
-defimpl Phoenix.HTML.FormData, for: Ecto.Changeset do
+defimpl Combo.HTML.FormData, for: Ecto.Changeset do
   def to_form(changeset, opts) do
     %{params: params, data: data, action: action} = changeset
     {action, opts} = Keyword.pop(opts, :action, action)
@@ -7,7 +7,7 @@ defimpl Phoenix.HTML.FormData, for: Ecto.Changeset do
     name = to_string(name || form_for_name(data))
     id = Keyword.get(opts, :id) || name
 
-    %Phoenix.HTML.Form{
+    %Combo.HTML.Form{
       source: changeset,
       impl: __MODULE__,
       id: id,
@@ -54,7 +54,7 @@ defimpl Phoenix.HTML.FormData, for: Ecto.Changeset do
           %{data: data, params: params} =
             changeset = to_changeset(changeset, parent_action, module, cast, nil)
 
-          %Phoenix.HTML.Form{
+          %Combo.HTML.Form{
             source: changeset,
             action: parent_action,
             impl: __MODULE__,
@@ -88,7 +88,7 @@ defimpl Phoenix.HTML.FormData, for: Ecto.Changeset do
 
           index_string = Integer.to_string(index)
 
-          %Phoenix.HTML.Form{
+          %Combo.HTML.Form{
             source: changeset,
             impl: __MODULE__,
             action: parent_action,
