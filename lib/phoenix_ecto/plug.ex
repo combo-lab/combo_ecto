@@ -26,40 +26,6 @@ unless Ecto.SubQueryError in excluded_exceptions do
   end
 end
 
-unless Phoenix.Ecto.PendingMigrationError in excluded_exceptions do
-  defimpl Plug.Exception, for: Phoenix.Ecto.PendingMigrationError do
-    def status(_error), do: 503
-
-    def actions(%{repo: repo, directories: directories, migration_opts: migration_opts}),
-      do: [
-        %{
-          label: "Run migrations for repo",
-          handler: {__MODULE__, :migrate, [repo, directories, migration_opts]}
-        }
-      ]
-
-    def migrate(repo, directories, migration_opts) do
-      Ecto.Migrator.run(repo, directories, :up, Keyword.merge(migration_opts || [], all: true))
-    end
-  end
-end
-
-unless Phoenix.Ecto.StorageNotCreatedError in excluded_exceptions do
-  defimpl Plug.Exception, for: Phoenix.Ecto.StorageNotCreatedError do
-    def status(_error), do: 503
-
-    def actions(%{repo: repo}),
-      do: [
-        %{
-          label: "Create database for repo",
-          handler: {__MODULE__, :storage_up, [repo]}
-        }
-      ]
-
-    def storage_up(repo), do: repo.__adapter__().storage_up(repo.config())
-  end
-end
-
 if Code.ensure_loaded?(Postgrex.Error) do
   unless Postgrex.Error in excluded_exceptions do
     defimpl Plug.Exception, for: Postgrex.Error do
