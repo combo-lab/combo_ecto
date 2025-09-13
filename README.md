@@ -1,6 +1,6 @@
 # Combo.Ecto
 
-[![CI](https://github.com/combo-team/combo_ecto/actions/workflows/ci.yml/badge.svg)](https://github.com/combo-team/combo_ecto/actions/workflows/ci.yml)
+[![CI](https://github.com/combo-lab/combo_ecto/actions/workflows/ci.yml/badge.svg)](https://github.com/combo-lab/combo_ecto/actions/workflows/ci.yml)
 [![Hex.pm](https://img.shields.io/hexpm/v/combo_ecto.svg)](https://hex.pm/packages/combo_ecto)
 
 Provides Ecto integration for Combo.
@@ -34,4 +34,4 @@ config :combo_ecto,
 
 ## License
 
-Same as [Combo](https://github.com/combo-team/combo).
+Same as [Combo](https://github.com/combo-lab/combo).

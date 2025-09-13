@@ -3,8 +3,8 @@ defmodule Combo.Ecto.Mixfile do
 
   @version "0.1.0"
   @description "Provides Ecto integration for Combo."
-  @source_url "https://github.com/combo-team/combo_ecto"
-  @changelog_url "https://github.com/combo-team/combo_ecto/blob/v#{@version}/CHANGELOG.md"
+  @source_url "https://github.com/combo-lab/combo_ecto"
+  @changelog_url "https://github.com/combo-lab/combo_ecto/blob/v#{@version}/CHANGELOG.md"
 
   def project do
     [
