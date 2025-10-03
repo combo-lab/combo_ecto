@@ -31,7 +31,7 @@ defmodule Combo.Ecto.Mixfile do
 
   defp deps do
     [
-      {:combo, "~> 0.1"},
+      {:combo, "~> 0.4"},
       {:plug, "~> 1.9"},
       {:ecto, "~> 3.5"},
       {:postgrex, "~> 0.16", optional: true},
@@ -55,7 +55,7 @@ defmodule Combo.Ecto.Mixfile do
     [
       licenses: ["MIT"],
       links: %{
-        "GitHub" => @source_url,
+        "Source" => @source_url,
         "Changelog" => @changelog_url
       }
     ]
