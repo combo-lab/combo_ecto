@@ -1,7 +1,7 @@
 This software contains code derived from:
 
 - phoenixframework/phoenix_ecto (https://github.com/phoenixframework/phoenix_ecto)
-  Copyright Chris McCord
+  Copyright (c) Chris McCord
   Licensed under MIT License
 
 Full license texts are available in the LICENSES directory.
