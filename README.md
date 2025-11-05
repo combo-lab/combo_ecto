@@ -34,4 +34,4 @@ config :combo_ecto,
 
 ## License
 
-Same as [Combo](https://github.com/combo-lab/combo).
+[MIT](./LICENSE)
