@@ -198,7 +198,8 @@ defmodule Combo.Ecto.SQL.Sandbox do
       header: Keyword.get(opts, :header, "user-agent"),
       path: get_path_info(opts[:at]),
       repos: List.wrap(opts[:repo]),
-      sandbox: session_opts[:sandbox] || Ecto.Adapters.SQL.Sandbox,
+      sandbox:
+        session_opts[:sandbox] || {Ecto.Adapters.SQL.Sandbox, :allow, [[unallow_existing: true]]},
       session_opts: session_opts
     }
   end
@@ -322,8 +323,14 @@ defmodule Combo.Ecto.SQL.Sandbox do
   end
 
   def allow(%{repo: repo, owner: owner}, sandbox),
-    do: Enum.each(List.wrap(repo), &sandbox.allow(&1, owner, self(), unallow_existing: true))
+    do: Enum.each(List.wrap(repo), &allow_sandbox(sandbox, &1, owner, self()))
 
   def allow(%{}, _sandbox), do: :ok
   def allow(nil, _sandbox), do: :ok
+
+  defp allow_sandbox({m, f, args}, repo, owner, pid),
+    do: apply(m, f, [repo, owner, pid | args])
+
+  defp allow_sandbox(sandbox, repo, owner, pid) when is_atom(sandbox),
+    do: sandbox.allow(repo, owner, pid)
 end
