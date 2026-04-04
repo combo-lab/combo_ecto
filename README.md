@@ -34,4 +34,4 @@ config :combo_ecto,
 
 ## License
 
-[MIT](./LICENSE)
+MIT
