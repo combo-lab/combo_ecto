@@ -1,7 +1,7 @@
 defmodule Combo.Ecto.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
   @description "Provides Ecto integration for Combo."
   @source_url "https://github.com/combo-lab/combo_ecto"
   @changelog_url "https://github.com/combo-lab/combo_ecto/blob/v#{@version}/CHANGELOG.md"
@@ -31,7 +31,7 @@ defmodule Combo.Ecto.Mixfile do
 
   defp deps do
     [
-      {:combo, "~> 0.4"},
+      {:combo, "~> 0.10"},
       {:plug, "~> 1.9"},
       {:ecto, "~> 3.5"},
       {:postgrex, "~> 0.16", optional: true},
